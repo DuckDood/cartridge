@@ -10,9 +10,14 @@
 ```
 git clone https://github.com/DuckDood/cartridge.git
 cd cartridge/
+```
+
+```
 make
+```
 
 Or
 
+```
 make install
 ```
