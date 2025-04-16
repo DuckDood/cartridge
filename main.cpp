@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
@@ -51,13 +50,43 @@ int main(int argc, char* argv[]) {
 	fclose(config);
 	
 	std::string buffer = buf; // strings are way easier tbh
+	std::string makefileStr = "";
 	std::string line;
+	int tempGet;
 	std::istringstream buff(buffer);
-
+	std::string token;
+	std::string token2;
+	bool running = true;
+	bool inMake;
+	int i = 0;
+	while(running) {
 	std::getline(buff, line);
+		i++;
+		tempGet = line.find(':');
+		if(tempGet == 0) {
+			std::cout << "Line:"<< i << ", Syntax error: Use of Colon suspiciously (in first character of line)\n";
+			exit(1);
+		}
+		if(tempGet == std::string::npos && !inMake) {
+			token = line;
+			//std::cout << token;
+		} else {
+			if (!inMake) {
+				token = line.substr(0, tempGet);
+				token2 = line.substr(tempGet+1, line.length());
+				inMake = true;
+				makefileStr += line + '\n';
+			} else if(line == "end") {
+				inMake = false;
+				running = false;
+			} else {
+				makefileStr += line + '\n';
+			}
+		}
+	}
 
-	std::cout << line;
-
+	std::cout << makefileStr;
+	fwrite(makefileStr.c_str(), sizeof(char), makefileStr.length(), makefile);
 
 
 	return 0;
