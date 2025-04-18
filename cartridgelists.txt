@@ -1,0 +1,4 @@
+adddir obj/
+adddir build/
+include main.cpp
+build cartridge

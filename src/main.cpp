@@ -63,10 +63,12 @@ int main(int argc, char* argv[]) {
 	std::string makefile_string = "";
 	std::string line;
 	int temp_get;
+	int temp2;
 	std::istringstream buff(buffer);
 	std::string token;
 	std::string token2;
 	std::string temp = "";
+	std::string temp3 = "";
 	std::string compiler;
 	bool running = true;
 	bool inMake;
@@ -74,7 +76,8 @@ int main(int argc, char* argv[]) {
 	int newline_count = count_newlines(buffer);
 	std::string end_all = "all: ";
 	std::vector<std::string> names;
-	std::vector<std::string> names2;
+	std::vector<std::string> dirnames;
+	std::vector<std::string> buildnames;
 	std::string nextobj = "";
 	std::string token3 = "";
 	bool noall = false;
@@ -95,26 +98,34 @@ int main(int argc, char* argv[]) {
 			token2 = line.substr(temp_get+1, line.length());
 			if(token == "include") {
 				token3 = token2.substr(token2.rfind("."), token2.length());
+			//	token2 = "src/" + token2;
 				temp = token2.substr(0, token2.rfind("."));
+				temp3=temp;
 				if(nextobj != "") {
 					temp = nextobj;
 				}
-				std::cout << temp << "\n";
+				//std::cout << temp << "\n";
 				if(nextobj == "") {
 					temp = "obj/" + temp + ".o: " + token2;
 				} else {
 					temp = "obj/" + temp + ": " + token2;
 				}
+				if(nextobj == "") {
+					temp3 = "obj/" + temp3 + ".o: " + "src/"+token2;
+				} else {
+					temp3 = "obj/" + temp3 + ": " + "src/"+token2;
+				}
+				temp2 = temp.length();
 				nextobj = "";
 				if(!noall) {
-					names.push_back(temp.substr(0, temp.length() - token2.length() -2));
+					names.push_back(temp.substr(0, temp2 - (token2.length()) -2));
 					noall = false;
 				}
 				compiler = token3 == ".c"? "${CC}": "${CXX}"; // should change to fallback on c, not other way around.
 				// tabs in front of compiler, not space
- 				temp += "\n	" + compiler + " " + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o";
+ 				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o";
 			//	std::cout << temp;
-				makefile_string += temp + "\n\n";
+				makefile_string += temp3 + "\n\n";
 
 			} else
 			if(token == "nextobj") {
@@ -148,19 +159,25 @@ int main(int argc, char* argv[]) {
 				}
 				temp = "";
 				if(!noall) {
-					names.push_back(token2);
+					dirnames.push_back(token2);
 				}
 				noall = false;
 				temp += token2;
 				temp += ":\n	mkdir -p " + token2 + "\n\n";
 				makefile_string += temp;
-				std::cout << temp;
 			}
 		} else {
 			if(!inMake) {
 				token = line.substr(0, temp_get);
-				if(!noall) {
-					names.push_back(token);
+				if(token.at(token.length()-1) == '/') {
+					if(!noall) {
+						dirnames.push_back(token);
+					}
+					
+				} else {
+					if(!noall) {
+						names.push_back(token);
+					}
 				}
 				noall = false;
 				//names.push_back(token);
@@ -176,6 +193,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	//std::cout << makefile_string;
+	for(int i = 0; i < dirnames.size(); i++) {
+		end_all += dirnames.at(i) + " ";
+	}	
 	for(int i = 0; i < names.size(); i++) {
 		end_all += names.at(i) + " ";
 	}	
