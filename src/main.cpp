@@ -81,6 +81,7 @@ int main(int argc, char* argv[]) {
 	std::string nextobj = "";
 	std::string token3 = "";
 	bool noall = false;
+	bool nobuild = false;
 	while(running) {
 	
 		i++;
@@ -119,8 +120,12 @@ int main(int argc, char* argv[]) {
 				nextobj = "";
 				if(!noall) {
 					names.push_back(temp.substr(0, temp2 - (token2.length()) -2));
-					noall = false;
 				}
+					noall = false;
+				if(!nobuild) {
+					buildnames.push_back(temp.substr(0, temp2 - (token2.length()) -2));
+				}
+				nobuild=false;
 				compiler = token3 == ".c"? "${CC}": "${CXX}"; // should change to fallback on c, not other way around.
 				// tabs in front of compiler, not space
  				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o";
@@ -134,8 +139,8 @@ int main(int argc, char* argv[]) {
 			if(token == "build") {
 				token2 = line.substr(temp_get+1, line.length());
 				temp = "";
-				for(int i = 0; i < names.size(); i++) {
-					temp += names.at(i) + " ";
+				for(int i = 0; i < buildnames.size(); i++) {
+					temp += buildnames.at(i) + " ";
 				}	
 
 				token3 = "build/"+token2 + ": " + temp;
@@ -165,6 +170,9 @@ int main(int argc, char* argv[]) {
 				temp += token2;
 				temp += ":\n	mkdir -p " + token2 + "\n\n";
 				makefile_string += temp;
+			} else
+			if(token == "nobuild") {
+				nobuild=true;
 			}
 		} else {
 			if(!inMake) {
