@@ -130,23 +130,40 @@ int main(int argc, char* argv[]) {
 				token3 = "build/"+token2 + ": " + temp;
 				if(!noall) {
 					names.push_back("build/"+token2);
-					noall = false;
 				}
+				noall = false;
 				token3 += "\n	g++ " + temp + " -o build/" + token2;
 				token3 += "\n\n";
-				std::cout << token3 << "\n";
+				//std::cout << token3 << "\n";
 				makefile_string += token3;
 			} else
 			if(token == "noall") {
 				noall = true;
 			} else
 			if(token == "adddir") {
-				
+				token2 = line.substr(temp_get+1, line.length());
+				if(token2.at(token2.length()-1) != '/') {
+					std::cout << "Line:" << i << ", Syntax error: no slash at end of directory.\n";
+					exit(1);
+				}
+				temp = "";
+				if(!noall) {
+					names.push_back(token2);
+				}
+				noall = false;
+				temp += token2;
+				temp += ":\n	mkdir -p " + token2 + "\n\n";
+				makefile_string += temp;
+				std::cout << temp;
 			}
 		} else {
 			if(!inMake) {
 				token = line.substr(0, temp_get);
-				names.push_back(token);
+				if(!noall) {
+					names.push_back(token);
+				}
+				noall = false;
+				//names.push_back(token);
 				token2 = line.substr(temp_get+1, line.length());
 				inMake = true;
 				makefile_string += line + '\n';
