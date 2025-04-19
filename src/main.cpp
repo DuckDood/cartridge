@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> names;
 	std::vector<std::string> dirnames;
 	std::vector<std::string> buildnames;
+	std::vector<std::string> depnames; // too many vectors
 	std::string nextobj = "";
 	std::string token3 = "";
 	bool noall = false;
@@ -110,7 +111,8 @@ int main(int argc, char* argv[]) {
 					temp = "obj/" + temp + ".o: " + token2;
 				} else {
 					temp = "obj/" + temp + ": " + token2;
-				}
+				} 
+				// getting obj names different from src names correctly
 				if(nextobj == "") {
 					temp3 = "obj/" + temp3 + ".o: " + "src/"+token2;
 				} else {
@@ -149,6 +151,10 @@ int main(int argc, char* argv[]) {
 				}
 				noall = false;
 				token3 += "\n	g++ " + temp + " -o build/" + token2;
+				token3 += " "; // adding dependencies with -l
+				for(int i = 0; i < depnames.size(); i++) { // yeah
+					token3 += "-l" + depnames.at(i) + " ";
+				}	
 				token3 += "\n\n";
 				//std::cout << token3 << "\n";
 				makefile_string += token3;
@@ -173,6 +179,10 @@ int main(int argc, char* argv[]) {
 			} else
 			if(token == "nobuild") {
 				nobuild=true;
+			} else
+			if(token == "dep") {
+				token2 = line.substr(temp_get+1, line.length());
+				depnames.push_back(token2);
 			}
 		} else {
 			if(!inMake) {

@@ -9,5 +9,5 @@ obj/main.o: src/main.cpp
 	${CXX} src/main.cpp -c -o obj/main.o
 
 build/cartridge: obj/main.o 
-	g++ obj/main.o  -o build/cartridge
+	g++ obj/main.o  -o build/cartridge 
 
