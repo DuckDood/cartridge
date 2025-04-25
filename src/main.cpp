@@ -209,6 +209,16 @@ int main(int argc, char* argv[]) {
 			
 				temp2 = std::distance(buildnames.begin(), iterator);
 				buildnames.erase(iterator);
+			} else
+			if(token == "rmdep") {
+				token2 = line.substr(temp_get+1, line.length());
+				iterator = std::find(depnames.begin(), depnames.end(), token2);
+				if(iterator == depnames.end()) {
+					std::cout << "Line:" << i << ", Syntax error: trying to remove a dependency without being defined\n";
+					exit(1);
+				}
+				temp2 = std::distance(depnames.begin(), iterator);
+				depnames.erase(iterator);
 			}
 		} else {
 			if(!inMake) {
