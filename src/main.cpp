@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 // thanks stackoverflow
 char* readfile(FILE *f) {
@@ -81,6 +82,7 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> depnames; // too many vectors
 	std::string nextobj = "";
 	std::string token3 = "";
+	std::vector<std::string>::iterator iterator;
 	bool noall = false;
 	bool nobuild = false;
 	while(running) {
@@ -183,6 +185,30 @@ int main(int argc, char* argv[]) {
 			if(token == "dep") {
 				token2 = line.substr(temp_get+1, line.length());
 				depnames.push_back(token2);
+			} else
+			if(token == "abuild") {
+				token2 = line.substr(temp_get+1, line.length());
+				token2.erase(token2.rfind("."), token2.length());
+				token2 += ".o";
+				token2 = "obj/" + token2;
+				buildnames.push_back(token2);
+			} else
+			if(token == "rmbuild") {
+				token2 = line.substr(temp_get+1, line.length());
+				if(token2 == "/") {
+					buildnames.clear();
+					continue;
+				}
+				token2.erase(token2.rfind("."), token2.length());
+				token2 += ".o";
+				iterator = std::find(buildnames.begin(), buildnames.end(), "obj/" + token2);
+				if(iterator == buildnames.end()) {
+					std::cout << "Line:" << i << ", Syntax error: trying to remove a source without being defined\n";
+					exit(1);
+				}
+			
+				temp2 = std::distance(buildnames.begin(), iterator);
+				buildnames.erase(iterator);
 			}
 		} else {
 			if(!inMake) {
