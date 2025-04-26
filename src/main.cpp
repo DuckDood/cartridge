@@ -83,6 +83,11 @@ int main(int argc, char* argv[]) {
 	std::string nextobj = "";
 	std::string token3 = "";
 	std::vector<std::string>::iterator iterator;
+	std::vector<std::string>::iterator iterator2;
+	std::vector<std::string> biops;
+	std::vector<std::string> biopsl;
+	std::vector<std::string> bivars;
+	std::vector<std::string> bivarsl;
 	bool noall = false;
 	bool nobuild = false;
 	while(running) {
@@ -132,7 +137,15 @@ int main(int argc, char* argv[]) {
 				nobuild=false;
 				compiler = token3 == ".c"? "${CC}": "${CXX}"; // should change to fallback on c, not other way around.
 				// tabs in front of compiler, not space
- 				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o";
+ 				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o ";
+				token3 = "";
+				for(int i = 0; i < biops.size(); i++) {
+					token3 += "-D" + biops.at(i) + "=${" + bivars.at(i) + "} ";
+				}
+				for(int i = 0; i < biopsl.size(); i++) {
+					token3 += "-D" + biopsl.at(i) + "=" + bivarsl.at(i) + " ";
+				}
+				temp3 += token3;
 			//	std::cout << temp;
 				makefile_string += temp3 + "\n\n";
 
@@ -219,7 +232,74 @@ int main(int argc, char* argv[]) {
 				}
 				temp2 = std::distance(depnames.begin(), iterator);
 				depnames.erase(iterator);
+			} else 
+			if(token == "var") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				temp = "";
+				temp += "ifndef " + token2;
+				temp += "\n" + token2 + " := " + token3;
+				temp += "\nendif\n";
+				makefile_string += temp;
+			} else 
+			if(token == "vare") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				temp = "";
+				temp += "ifndef " + token2;
+				temp += "\n" + token2 + " = " + token3;
+				temp += "\nendif\n";
+				makefile_string += temp;
+			} else
+			if(token == "bopt") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				biops.push_back(token2);
+				bivars.push_back(token3);
+			} else
+			if(token == "boptl") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				biopsl.push_back(token2);
+				bivarsl.push_back(token3);
+			} else
+			if(token == "rmbopt") {
+				token2 = line.substr(temp_get+1, line.length());
+				iterator = std::find(biops.begin(), biops.end(),token2);
+				if(iterator == biops.end()) {
+					std::cout << "Line:" << i << ", Syntax error: trying to remove a build option without being defined\n";
+					exit(1);
+				}
+			
+				temp2 = std::distance(biops.begin(), iterator);
+				iterator2 = bivars.begin();
+				std::advance(iterator2, temp2);
+				biops.erase(iterator);
+				bivars.erase(iterator2);
+			} else
+			if(token == "rmboptl") {
+				token2 = line.substr(temp_get+1, line.length());
+				iterator = std::find(biopsl.begin(), biopsl.end(),token2);
+				if(iterator == biopsl.end()) {
+					std::cout << "Line:" << i << ", Syntax error: trying to remove a build option without being defined\n";
+					exit(1);
+				}
+			
+				temp2 = std::distance(biopsl.begin(), iterator);
+				iterator2 = bivarsl.begin();
+				std::advance(iterator2, temp2);
+				biopsl.erase(iterator);
+				bivarsl.erase(iterator2);
 			}
+
 		} else {
 			if(!inMake) {
 				token = line.substr(0, temp_get);
