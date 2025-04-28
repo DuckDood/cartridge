@@ -88,11 +88,14 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> biops;
 	std::vector<std::string> biopsl;
 	std::vector<std::string> bivars;
-	std::vector<std::string> bivarsl;
+	std::vector<std::string> bivarsl; // about the too many vectors thing...
 	bool cmclear = false;
 	bool lkclear = false;
 	bool noall = false;
 	bool nobuild = false;
+	std::string bname = "build/";
+	std::string sname = "src/";
+	std::string oname = "obj/";
 	while(running) {
 	
 		i++;
@@ -118,15 +121,16 @@ int main(int argc, char* argv[]) {
 				}
 				//std::cout << temp << "\n";
 				if(nextobj == "") {
-					temp = "obj/" + temp + ".o: " + token2;
+					temp = oname + temp + ".o: " + token2;
 				} else {
-					temp = "obj/" + temp + ": " + token2;
+					temp = oname + temp + ": " + token2;
 				} 
 				// getting obj names different from src names correctly
 				if(nextobj == "") {
-					temp3 = "obj/" + temp3 + ".o: " + "src/"+token2;
+				//	temp3 = "obj/" + temp3 + ".o: " + "src/"+token2;
+					temp3 = oname + temp3 + ".o: " + sname+token2;
 				} else {
-					temp3 = "obj/" + temp3 + ": " + "src/"+token2;
+					temp3 = oname + temp3 + ": " + sname+token2;
 				}
 				temp2 = temp.length();
 				nextobj = "";
@@ -143,7 +147,7 @@ int main(int argc, char* argv[]) {
 				cmclear = true;
 				}
 				// tabs in front of compiler, not space
- 				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o ";
+ 				temp3 += "\n	" + compiler + " " + sname + token2 + " -c -o "+oname + token2.substr(0, token2.rfind('.')) + ".o ";
 				if(cmclear) {
 					compiler = "";
 					cmclear = false;
@@ -170,16 +174,16 @@ int main(int argc, char* argv[]) {
 					temp += buildnames.at(i) + " ";
 				}	
 
-				token3 = "build/"+token2 + ": " + temp;
+				token3 = bname+token2 + ": " + temp;
 				if(!noall) {
-					names.push_back("build/"+token2);
+					names.push_back(bname+token2);
 				}
 				noall = false;
 				if(linker.empty()) {
 				linker = "${CXX}";
 				lkclear = true;
 				}
-				token3 += "\n	"+linker+" " + temp + " -o build/" + token2;
+				token3 += "\n	"+linker+" " + temp + " -o "+bname + token2;
 				if(lkclear) {
 					compiler = "";
 					lkclear = false;
@@ -221,7 +225,7 @@ int main(int argc, char* argv[]) {
 				token2 = line.substr(temp_get+1, line.length());
 				token2.erase(token2.rfind("."), token2.length());
 				token2 += ".o";
-				token2 = "obj/" + token2;
+				token2 = oname + token2;
 				buildnames.push_back(token2);
 			} else
 			if(token == "rmbuild") {
@@ -232,7 +236,7 @@ int main(int argc, char* argv[]) {
 				}
 				token2.erase(token2.rfind("."), token2.length());
 				token2 += ".o";
-				iterator = std::find(buildnames.begin(), buildnames.end(), "obj/" + token2);
+				iterator = std::find(buildnames.begin(), buildnames.end(), oname + token2);
 				if(iterator == buildnames.end()) {
 					std::cout << "Line:" << i << ", Syntax error: trying to remove a source without being defined\n";
 					exit(1);
@@ -329,6 +333,47 @@ int main(int argc, char* argv[]) {
 					linker = "";
 				} else {
 					linker = line.substr(temp_get+1, line.length());
+				}
+			} else
+			if(token == "svar") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				temp = "";
+				temp += "\n" + token2 + " := " + token3;
+				temp += "\n";
+				makefile_string += temp;
+			} else 
+			if(token == "svare") {
+				line.erase(0, temp_get+1);
+				token2 = line.substr(0, line.find(" "));
+				line.erase(0, line.find(" ")+1);
+				token3 = line;
+				temp = "";
+				temp += "\n" + token2 + " = " + token3;
+				temp += "\n";
+				makefile_string += temp;
+			} else
+			if(token == "bname") {
+				if(temp_get == std::string::npos) {
+					bname = "build/";
+				} else {
+					bname = line.substr(temp_get+1, line.length());
+				}
+			} else
+			if(token == "oname") {
+				if(temp_get == std::string::npos) {
+					oname = "obj/";
+				} else {
+					oname = line.substr(temp_get+1, line.length());
+				}
+			} else
+			if(token == "sname") {
+				if(temp_get == std::string::npos) {
+					sname = "src/";
+				} else {
+					sname = line.substr(temp_get+1, line.length());
 				}
 			}
 
