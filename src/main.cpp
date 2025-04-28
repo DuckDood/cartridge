@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
 	std::string temp = "";
 	std::string temp3 = "";
 	std::string compiler;
+	std::string linker;
 	bool running = true;
 	bool inMake;
 	int i = 0;
@@ -88,6 +89,8 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> biopsl;
 	std::vector<std::string> bivars;
 	std::vector<std::string> bivarsl;
+	bool cmclear = false;
+	bool lkclear = false;
 	bool noall = false;
 	bool nobuild = false;
 	while(running) {
@@ -135,9 +138,16 @@ int main(int argc, char* argv[]) {
 					buildnames.push_back(temp.substr(0, temp2 - (token2.length()) -2));
 				}
 				nobuild=false;
-				compiler = token3 == ".c"? "${CC}": "${CXX}"; // should change to fallback on c, not other way around.
+				if(compiler.empty()) {
+				compiler = token3 == ".c"? "${CXX}": "${CC}";
+				cmclear = true;
+				}
 				// tabs in front of compiler, not space
  				temp3 += "\n	" + compiler + " " + "src/" + token2 + " -c -o obj/" + token2.substr(0, token2.rfind('.')) + ".o ";
+				if(cmclear) {
+					compiler = "";
+					cmclear = false;
+				}
 				token3 = "";
 				for(int i = 0; i < biops.size(); i++) {
 					token3 += "-D" + biops.at(i) + "=${" + bivars.at(i) + "} ";
@@ -165,7 +175,15 @@ int main(int argc, char* argv[]) {
 					names.push_back("build/"+token2);
 				}
 				noall = false;
-				token3 += "\n	g++ " + temp + " -o build/" + token2;
+				if(linker.empty()) {
+				linker = "${CXX}";
+				lkclear = true;
+				}
+				token3 += "\n	"+linker+" " + temp + " -o build/" + token2;
+				if(lkclear) {
+					compiler = "";
+					lkclear = false;
+				}
 				token3 += " "; // adding dependencies with -l
 				for(int i = 0; i < depnames.size(); i++) { // yeah
 					token3 += "-l" + depnames.at(i) + " ";
@@ -298,6 +316,20 @@ int main(int argc, char* argv[]) {
 				std::advance(iterator2, temp2);
 				biopsl.erase(iterator);
 				bivarsl.erase(iterator2);
+			} else 
+			if(token == "compiler") {
+				if(temp_get == std::string::npos) {
+					compiler = "";
+				} else {
+				compiler = line.substr(temp_get+1, line.length());
+				}
+			} else
+			if(token == "linker") {
+				if(temp_get == std::string::npos) {
+					linker = "";
+				} else {
+					linker = line.substr(temp_get+1, line.length());
+				}
 			}
 
 		} else {
