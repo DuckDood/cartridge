@@ -3,7 +3,7 @@
 ### Cartridge is intended for relatively simple C/C++ projects, looking similar to this:<br>
 * src/ directory
 * obj/ directory
-* bin/ directory
+* build/ directory
 * Makefile
 
 ### Download/Installation
