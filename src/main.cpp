@@ -89,6 +89,10 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> biopsl;
 	std::vector<std::string> bivars;
 	std::vector<std::string> bivarsl; // about the too many vectors thing...
+	std::vector<std::string> cnames;
+	std::vector<std::string> cdirs;
+	std::vector<std::string> cnamesf; 
+	std::vector<std::string> cdirsf; // oml
 	bool cmclear = false;
 	bool lkclear = false;
 	bool noall = false;
@@ -375,6 +379,26 @@ int main(int argc, char* argv[]) {
 				} else {
 					sname = line.substr(temp_get+1, line.length());
 				}
+			} else
+				if(token == "cdir") {
+					token2 = line.substr(temp_get+1, line.length());
+					cdirs.push_back(token2);
+
+				
+			} else if(token == "cfile") {
+					token2 = line.substr(temp_get+1, line.length());
+					cnames.push_back(token2);
+				
+			} else
+				if(token == "cdirf") {
+					token2 = line.substr(temp_get+1, line.length());
+					cdirsf.push_back(token2);
+
+				
+			} else if(token == "cfilef") {
+					token2 = line.substr(temp_get+1, line.length());
+					cnamesf.push_back(token2);
+				
 			}
 
 		} else {
@@ -404,6 +428,50 @@ int main(int argc, char* argv[]) {
 	}
 
 	//std::cout << makefile_string;
+	temp3 = "";
+	
+	temp3 +="\nclean:\n";
+	if(!cnames.empty()) {
+	temp3 +="	rm ";
+	for(int i = 0; i < cnames.size(); i++) {
+		temp3 += cnames.at(i) + " ";
+	}	
+	temp3 +="\n";
+	}
+	if(!cdirs.empty()) {
+	temp3 +="	rm -r ";
+	for(int i = 0; i < cdirs.size(); i++) {
+		temp3 += cdirs.at(i) + " ";
+	}	
+	temp3 +="\n";
+	}
+	if(!cnamesf.empty()) {
+	temp3 +="	rm -f ";
+	for(int i = 0; i < cnamesf.size(); i++) {
+		temp3 += cnamesf.at(i) + " ";
+	}	
+	temp3 +="\n";
+	}
+	if(!cdirsf.empty()) {
+	temp3 +="	rm -rf ";
+	for(int i = 0; i < cdirsf.size(); i++) {
+		temp3 += cdirsf.at(i) + " ";
+	}	
+	temp3 +="\n";
+	}
+
+	temp3 +="\n";
+	makefile_string = temp3 + makefile_string;
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 	for(int i = 0; i < dirnames.size(); i++) {
 		end_all += dirnames.at(i) + " ";
 	}	
@@ -412,6 +480,8 @@ int main(int argc, char* argv[]) {
 	}	
 	end_all += '\n';
 	makefile_string = end_all + makefile_string;
+
+
 	fwrite(makefile_string.c_str(), sizeof(char), makefile_string.length(), makefile);
 	fclose(makefile);
 

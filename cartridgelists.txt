@@ -1,10 +1,6 @@
-noall
+cdir obj/
+cdir build/
 
-clean:
-	rm -r obj/ build/
-.PHONY: clean
-
-end
 adddir obj/
 adddir build/
 include main.cpp
