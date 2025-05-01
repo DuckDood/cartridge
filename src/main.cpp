@@ -97,6 +97,8 @@ int main(int argc, char* argv[]) {
 	bool lkclear = false;
 	bool noall = false;
 	bool nobuild = false;
+	bool lmake = false;
+	bool cleans = false;
 	std::string bname = "build/";
 	std::string sname = "src/";
 	std::string oname = "obj/";
@@ -106,12 +108,12 @@ int main(int argc, char* argv[]) {
 		if(i >= newline_count) running = false;	
 		std::getline(buff, line);
 	
-		temp_get = line.find(':');
+		/*temp_get = line.find(':');
 		if(temp_get == 0) {
 			std::cout << "Line:"<< i << ", Syntax error: Use of Colon suspiciously (in first character of line)\n";
 			exit(1);
-		}
-		if(temp_get == std::string::npos && !inMake) {
+		}*/
+		if(/*temp_get == std::string::npos && */!inMake) {
 			temp_get = line.find(' ');
 			token = line.substr(0, temp_get);
 			token2 = line.substr(temp_get+1, line.length());
@@ -147,7 +149,7 @@ int main(int argc, char* argv[]) {
 				}
 				nobuild=false;
 				if(compiler.empty()) {
-				compiler = token3 == ".c"? "${CXX}": "${CC}";
+				compiler = token3 == ".cpp"? "${CXX}": "${CC}";
 				cmclear = true;
 				}
 				// tabs in front of compiler, not space
@@ -399,10 +401,14 @@ int main(int argc, char* argv[]) {
 					token2 = line.substr(temp_get+1, line.length());
 					cnamesf.push_back(token2);
 				
-			}
+			} else
+				if (token == "make") {
+					inMake=true;
+				}
 
 		} else {
-			if(!inMake) {
+			if(!lmake) {
+				 temp_get = line.find(':');
 				token = line.substr(0, temp_get);
 				if(token.at(token.length()-1) == '/') {
 					if(!noall) {
@@ -417,10 +423,11 @@ int main(int argc, char* argv[]) {
 				noall = false;
 				//names.push_back(token);
 				token2 = line.substr(temp_get+1, line.length());
-				inMake = true;
+				lmake = true;
 				makefile_string += line + '\n';
 			} else if(line == "end") {
 				inMake = false;
+				lmake = false;
 			} else {
 				makefile_string += line + '\n';
 			}
@@ -435,6 +442,7 @@ int main(int argc, char* argv[]) {
 	temp3 +="	rm ";
 	for(int i = 0; i < cnames.size(); i++) {
 		temp3 += cnames.at(i) + " ";
+		cleans = true;
 	}	
 	temp3 +="\n";
 	}
@@ -444,6 +452,7 @@ int main(int argc, char* argv[]) {
 		temp3 += cdirs.at(i) + " ";
 	}	
 	temp3 +="\n";
+		cleans = true;
 	}
 	if(!cnamesf.empty()) {
 	temp3 +="	rm -f ";
@@ -451,6 +460,7 @@ int main(int argc, char* argv[]) {
 		temp3 += cnamesf.at(i) + " ";
 	}	
 	temp3 +="\n";
+		cleans = true;
 	}
 	if(!cdirsf.empty()) {
 	temp3 +="	rm -rf ";
@@ -458,10 +468,13 @@ int main(int argc, char* argv[]) {
 		temp3 += cdirsf.at(i) + " ";
 	}	
 	temp3 +="\n";
+		cleans = true;
 	}
 
 	temp3 +="\n";
-	makefile_string = temp3 + makefile_string;
+	if(cleans) {
+		makefile_string = temp3 + makefile_string;
+	}
 	//
 	//
 	//
