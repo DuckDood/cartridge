@@ -102,6 +102,8 @@ int main(int argc, char* argv[]) {
 	std::string bname = "build/";
 	std::string sname = "src/";
 	std::string oname = "obj/";
+	std::string instbin = "";
+	std::string instpath = "/usr/local/bin/";
 	while(running) {
 	
 		i++;
@@ -404,7 +406,13 @@ int main(int argc, char* argv[]) {
 			} else
 				if (token == "make") {
 					inMake=true;
-				}
+				} else
+			if(token == "installbin") {
+				instbin = line.substr(temp_get+1, line.length());;
+			} else
+			if(token == "installpath") {
+				instpath = line.substr(temp_get+1, line.length());;
+			}
 
 		} else {
 			if(!lmake) {
@@ -472,7 +480,17 @@ int main(int argc, char* argv[]) {
 	}
 
 	temp3 +="\n";
+	temp3 +=".PHONY: clean";
+	temp3 +="\n";
 	if(cleans) {
+		makefile_string = temp3 + makefile_string;
+	}
+
+	if(!instbin.empty()) {
+		temp3 = "";
+		temp3 += "\ninstall:\n";
+		temp3 += "	install " + bname + instbin + " " + instpath;
+		temp3 += "\n.PHONY: install\n\n";
 		makefile_string = temp3 + makefile_string;
 	}
 	//

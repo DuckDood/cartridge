@@ -3,6 +3,7 @@ all: obj/ build/ obj/main.o build/cartridge
 clean:
 	rm -r obj/ build/ 
 
+.PHONY: clean
 obj/:
 	mkdir -p obj/
 
