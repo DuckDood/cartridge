@@ -443,6 +443,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	//std::cout << makefile_string;
+	makefile_string = "\n" + makefile_string;
 	temp3 = "";
 	
 	temp3 +="\nclean:\n";
@@ -479,7 +480,6 @@ int main(int argc, char* argv[]) {
 		cleans = true;
 	}
 
-	temp3 +="\n";
 	temp3 +=".PHONY: clean";
 	temp3 +="\n";
 	if(cleans) {
@@ -490,7 +490,7 @@ int main(int argc, char* argv[]) {
 		temp3 = "";
 		temp3 += "\ninstall:\n";
 		temp3 += "	install " + bname + instbin + " " + instpath;
-		temp3 += "\n.PHONY: install\n\n";
+		temp3 += "\n.PHONY: install\n";
 		makefile_string = temp3 + makefile_string;
 	}
 	//

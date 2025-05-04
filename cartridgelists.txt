@@ -1,3 +1,4 @@
+installbin cartridge
 cdir obj/
 cdir build/
 

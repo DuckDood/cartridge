@@ -1,0 +1,68 @@
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: sans-serif;
+	color: white;
+	background-color: #2f2f2f;
+	text-align: center;
+}
+ul {
+	text-align: left;
+}
+
+.desc {
+	font-size: 0.9em;
+}
+
+.content {
+	position: absolute;
+	top: 0%;	
+}
+
+code {
+	background:#1f1f1f;
+	border-radius: 3px;
+	font-size: 110%;
+	padding: 2px;
+}
+
+@property --hue {
+	syntax: "<number>";
+	inherits: true;
+/*	initial-value: 362;*/
+	initial-value: 330;
+}
+@property --p {
+	syntax: "<number>";
+	inherits: true;
+/*	initial-value: 362;*/
+	initial-value: 0;
+}
+
+@keyframes rainbow {
+	50% {
+		/*--hue: 334;*/
+		--p: 100;
+	}
+}
+
+.sides {
+	background-image: linear-gradient( to right , hsl(var(--hue) 83% 47%), hsl(calc(365 - var(--hue)) 83% 47%) calc(var(--p) * 1%), hsl(var(--hue) 83% 47%));
+	/*animation: rainbow 3s infinite linear;*/
+	animation: rainbow 6s infinite ease-in-out;
+	width: 200%;
+	height: 3em;
+	overflow: hidden;
+	position: fixed;
+	margin-top: 20%;
+}
+
+.s1{
+	transform: rotateZ(80deg);
+	margin-left:-60%;
+}
+.s2{
+	transform: scaleX(-1) rotateZ(80deg);
+	margin-right:-60%;
+}
