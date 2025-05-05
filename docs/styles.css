@@ -27,6 +27,24 @@ code {
 	padding: 2px;
 }
 
+.buttons {
+	padding: 10px;
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.button {
+	background-color: #1f1f1f;
+	padding: 14px;
+	font-size: 130%;
+	min-width: 160px;
+	border-radius: 10px;
+	margin: 5%;
+	color: white;
+	text-decoration: none;
+}
+
 @property --hue {
 	syntax: "<number>";
 	inherits: true;
