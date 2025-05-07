@@ -4,7 +4,7 @@
 		<title>Cartridge Docs</title>
 		<link rel="stylesheet" href="styles.css">
 	</head>
-	<body>
+	<body style="overflow-x: hidden;">
 		<div class="sides s1"></div>
 		<div class="sides s2"></div>
 		<div class="bar">
@@ -12,7 +12,7 @@
 			<div class="index">
 				<a class="nav" href="#Top">Top</a><br>
 				<a class="nav" href="#Download">Download</a><br>
-				<a class="nav" href="#inx">wawa</a><br>
+				<a class="nav" href="#funcs">Keywords</a><br>
 				<a class="nav"></a><br>
 			</div>
 		</div>
@@ -29,14 +29,127 @@
 			<h2 id="Download">Download</h2>
 			<p class="gst">Clone the project from <a href="https://github.com/DuckDood/cartridge" target="_blank" style="color: white;">Github</a> and run <code>make</code> or download <a download="downloads/cartridge" href="downloads/cartridge" style="color: white;">here</a>.</p>
 
-			<h2 id="inx">
-			test<br><br><br><br><br><br>
-			hehe<br><br><br><br><br><br><br>
-			hehe<br><br><br><br><br><br><br>
-			yoohoo
-			yoohoo
-			</h2>
+			<h2 id="funcs">Keywords &amp; variables</h2>
+			<h4 class="pardef">also i was halfway into writing this before i realised i hadnt written this, <em>cartridge</em> will automatically look for 'cartridgelists.txt' in the working directory or take a path as argument!</h4>
+			
+			<h3 style="font-size: 130%;">Variables</h3>
+			<h3>srcdir</h3>
+			<p class="pardef"><em>srcdir</em> is the directory of source files.</p>
+			<h3>objdir</h3>
+			<p class="pardef"><em>objdir</em> is the directory of object files.</p>
+			<h3>builddir</h3>
+			<p class="pardef"><em>builddir</em> is the directory of built executables.</p>
 
+			<h3>build</h3>
+			<p class="pardef"><em>build</em> is a list of object files to be built.</p>
+			
+			<h3>dep</h3>
+			<p class="pardef"><em>dep</em> is a list of dependencies for the program.</p>
+
+			<h3>all</h3>
+			<p class="pardef"><em>all</em> is a list of targets included in the all target.</p>
+
+			<h3>bopt &amp; boptl</h3>
+			<p class="pardef"><em>bopt</em> (build options) is a list of make variable names for the -D compiler option.<br>
+			<em>boptl</em> (build options literal) is a list of values for the -D compiler option.<br>
+			</p>
+
+			<h3>cnames, cnamesf, cdirs, and cdirsf</h3>
+			<p class="pardef">cnames, and cdirs will be removed by make clean. The ones with f at the end will be removed with -f.<p>
+			</p>
+
+
+			<h3 style="font-size: 130%;">Keywords</h3>
+			<h3>include [filename]</h3>
+			<p class="pardef"><em>include</em> specifies a file in <em>srcdir</em> should be compiled to a .o file and automatically adds it to build.</p>
+
+			<h3>nextobj [string]</h3>
+			<p class="pardef"><em>nextobj</em> should be used in front of an include statement, specifying a certain name for the object file rather than the filename of the source.</p>
+
+			<h3>build [filename]</h3>
+			<p class="pardef"><em>build</em> will build a file from obj's in <em>build</em> into <em>builddir</em>/[filename], with dependencies in <em>dep</em></p>
+
+			<h3>noall</h3>
+			<p class="pardef"><em>noall</em> will stop the next include, build, and adddir from automatically being added to all.</p>
+
+			<h3>adddir [directory name]</h3>
+			<p class="pardef"><em>adddir</em> will create a directory.</p>
+
+			<h3>nobuild</h3>
+			<p class="pardef"><em>nobuild</em> will stop the next <em>include</em> from automatically adding obj's to build.</p>
+
+			<h3>dep [string]</h3>
+			<p class="pardef"><em>dep</em> will add a dependency to <em>dep</em>.</p>
+
+			<h3>abuild [filename]</h3>
+			<p class="pardef"><em>abuild</em> will add a filename from a previous <em>include</em> (usually that has had a noall).</p>
+
+			<h3>rmbuild [string]</h3>
+			<p class="pardef"><em>rmbuild</em> will remove a obj previously added by <em>abuild</em> or <em>include</em> or all obj's if [string] is '/' (no quotes).</p>
+
+			<h3>rmdep [string]</h3>
+			<p class="pardef"><em>rmdep</em> will remove a dependency from <em>dep</em> added by the <em>dep</em> keyword.</p>
+
+			<h3>var [variable name] [value]</h3>
+			<p class="pardef"><em>var</em> will add a make variable [variable name] and assign it to [value] with ':='.</p>
+
+			<h3>vare [variable name] [value]</h3>
+			<p class="pardef"><em>vare</em> will add a make variable [variable name] and assign it to [value] with '='.</p>
+
+			<h3>bopt [macro name] [variable name]</h3>
+			<p class="pardef"><em>bopt</em> will add a macro in the compiler (with -D) as [macro name], and assign it to [variable name] eg. <code>gcc main.c -D[macro name]=${[variable name]}</code> .</p>
+
+			<h3>boptl [macro name] [value]</h3>
+			<p class="pardef"><em>boptl</em> will add a macro in the compiler (with -D) as [macro name], and assign it to [value] eg. <code>gcc main.c -D[macro name]=[value]</code> .</p>
+
+			<h3>rmbopt [bopt name]</h3>
+			<p class="pardef"><em>rmbopt</em> will remove a previously defined <em>bopt</em>, specified by a [macro name], in a bopt statement.</p>
+
+			<h3>rmboptl [boptl name]</h3>
+			<p class="pardef"><em>rmboptl</em> will remove a previously defined <em>boptl</em>, specified by a [macro name], in a boptl statement.</p>
+
+			<h3>compiler [string]</h3>
+			<p class="pardef"><em>compiler</em> will specify the compiler used, or if left blank it will set it to default. (being ${CC} for .c files (or anything else), or ${CXX} for .cpp files.)</p>
+
+			<h3>linker [string]</h3>
+			<p class="pardef"><em>linker</em> will specify the linker used, or if left blank it will set it to default. (${CXX})</p>
+
+			<h3>svar [variable name] [value]</h3>
+			<p class="pardef"><em>svar</em> will set [variable name] to [value] with ':='</p>
+			
+			<h3>svare [variable name] [value]</h3>
+			<p class="pardef"><em>svare</em> will set [variable name] to [value] with '='</p>
+			
+			<h3>bname [string]</h3>
+			<p class="pardef"><em>bname</em> will set <em>builddir</em> to [string]</p>
+			
+			<h3>oname [string]</h3>
+			<p class="pardef"><em>oname</em> will set <em>objdir</em> to [string]</p>
+			
+			<h3>sname [string]</h3>
+			<p class="pardef"><em>sname</em> will set <em>srcdir</em> to [string]</p>
+			
+			<h3>cdir [string]</h3>
+			<p class="pardef"><em>cdir</em> will add [string] to cdirs.</p>
+			
+			<h3>cfile [string]</h3>
+			<p class="pardef"><em>cfile</em> will add [string] to cnames.</p>
+			
+			<h3>cdirf [string]</h3>
+			<p class="pardef"><em>cdirf</em> will add [string] to cdirsf.</p>
+			
+			<h3>cfilef [string]</h3>
+			<p class="pardef"><em>cfilef</em> will add [string] to cnamesf.</p>
+			
+			<h3>make</h3>
+			<p class="pardef"><em>make</em> will start embedded make, adding any subsequent lines straight to the makefile, until reaching a line with 'end' (no tabs or spaces)</p>
+
+			<h3>installbin [filename]</h3>
+			<p class="pardef"><em>installbin</em> will add a install target with <em>builddir</em>/[filename] to be installed to <em>installpath</em></p>
+
+			<h3>installpath [path]</h3>
+			<p class="pardef bottomt"><em>installpath</em> will set installpath to [path] (by default /usr/local/bin)</p>
+			
 		</div>
 		<div>
 		</div>

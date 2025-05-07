@@ -31,7 +31,7 @@ ul {
 
 .gst {
 	margin: auto;
-	max-width: 70%;
+	max-width: 50%;
 }
 
 .content {
@@ -119,4 +119,20 @@ code {
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
+}
+
+.pardef {
+	max-width: 50%;
+	margin: auto; 
+}
+
+#funcs {
+}
+html {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.bottomt {
+	margin-bottom: 5%;
 }
