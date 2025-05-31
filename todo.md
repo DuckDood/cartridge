@@ -4,3 +4,5 @@
 * ~~keyword to start make mode instead of automatically~~
 * ~~make documentation~~
 * split source into multiple files *(maybe)*
+* makeflags!!!
+* and flags in general
