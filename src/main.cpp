@@ -93,6 +93,7 @@ int main(int argc, char* argv[]) {
 	std::vector<std::string> cdirs;
 	std::vector<std::string> cnamesf; 
 	std::vector<std::string> cdirsf; // oml
+	std::string as;
 	bool cmclear = false;
 	bool lkclear = false;
 	bool noall = false;
@@ -136,10 +137,11 @@ int main(int argc, char* argv[]) {
 				// getting obj names different from src names correctly
 				if(nextobj == "") {
 				//	temp3 = "obj/" + temp3 + ".o: " + "src/"+token2;
-					temp3 = oname + temp3 + ".o: " + sname+token2;
+					temp3 = oname + temp3 + ".o: " + sname+token2 + as;
 				} else {
-					temp3 = oname + temp3 + ": " + sname+token2;
+					temp3 = oname + temp3 + ": " + sname+token2 + as;
 				}
+				as = "";
 				temp2 = temp.length();
 				nextobj = "";
 				if(!noall) {
@@ -182,7 +184,8 @@ int main(int argc, char* argv[]) {
 					temp += buildnames.at(i) + " ";
 				}	
 
-				token3 = bname+token2 + ": " + temp;
+				token3 = bname+token2 + ": " + temp + as;
+				as = "";
 				if(!noall) {
 					names.push_back(bname+token2);
 				}
@@ -219,7 +222,8 @@ int main(int argc, char* argv[]) {
 				}
 				noall = false;
 				temp += token2;
-				temp += ":\n	mkdir -p " + token2 + "\n\n";
+				temp += (std::string)": " + as + "\n	mkdir -p " + token2 + "\n\n";
+				as = "";
 				makefile_string += temp;
 			} else
 			if(token == "nobuild") {
@@ -412,6 +416,9 @@ int main(int argc, char* argv[]) {
 			} else
 			if(token == "installpath") {
 				instpath = line.substr(temp_get+1, line.length());;
+			} else 
+			if(token == "checknext") {
+				as += " " + sname + line.substr(temp_get+1, line.length());
 			}
 
 		} else {

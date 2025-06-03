@@ -8,10 +8,10 @@ clean:
 	rm -r obj/ build/ 
 .PHONY: clean
 
-obj/:
+obj/: 
 	mkdir -p obj/
 
-build/:
+build/: 
 	mkdir -p build/
 
 obj/main.o: src/main.cpp
