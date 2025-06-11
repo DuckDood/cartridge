@@ -390,6 +390,25 @@ int main(int argc, char* argv[]) {
 			} else
 				if(token == "cdir") {
 					token2 = line.substr(temp_get+1, line.length());
+					if(sname.at(sname.length()-1) == '/') {
+						if(token2 == sname || token2 == sname+"/" || token2 == sname.substr(0, sname.length()-1)) {
+							std::cout << "you have your source directory as a \033[38;2;202;3;252mclean target\033[0m this might be an oopsie!!\nif you want to continue type y:";
+							if(!(std::cin.get() == 'y')) {
+								exit(0);
+							}
+	
+						}
+					} else {
+						if(token2 == sname || token2 == sname+"/") {
+							std::cout << "you have your source directory as a \033[38;2;202;3;252mclean target\033[0m this might be an oopsie!!\nif you want to continue type y:";
+							if(!(std::cin.get() == 'y')) {
+							exit(0);
+							}
+	
+						}
+
+	
+					}
 					cdirs.push_back(token2);
 
 				
@@ -400,6 +419,26 @@ int main(int argc, char* argv[]) {
 			} else
 				if(token == "cdirf") {
 					token2 = line.substr(temp_get+1, line.length());
+
+					if(sname.at(sname.length()-1) == '/') {
+						if(token2 == sname || token2 == sname+"/" || token2 == sname.substr(0, sname.length()-1)) {
+							std::cout << "you have your source directory as a \033[38;2;202;3;252mclean target\033[0m this might be an oopsie!!\nif you want to continue type y:";
+							if(!(std::cin.get() == 'y')) {
+								exit(0);
+							}
+	
+						}
+					} else {
+						if(token2 == sname || token2 == sname+"/") {
+							std::cout << "you have your source directory as a \033[38;2;202;3;252mclean target\033[0m this might be an oopsie!!\nif you want to continue type y:";
+							if(!(std::cin.get() == 'y')) {
+							exit(0);
+							}
+	
+						}
+					}
+
+
 					cdirsf.push_back(token2);
 
 				
