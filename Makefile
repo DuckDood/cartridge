@@ -15,8 +15,8 @@ build/:
 	mkdir -p build/
 
 obj/main.o: src/main.cpp
-	${CXX} src/main.cpp -c -o obj/main.o 
+	${CXX} src/main.cpp -c -o obj/main.o  
 
 build/cartridge: obj/main.o 
-	${CXX} obj/main.o  -o build/cartridge 
+	${CXX} obj/main.o  -o build/cartridge  
 

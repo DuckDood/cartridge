@@ -105,6 +105,8 @@ int main(int argc, char* argv[]) {
 	std::string oname = "obj/";
 	std::string instbin = "";
 	std::string instpath = "/usr/local/bin/";
+	std::string incflags = "";
+	std::string linkflags = "";
 	while(running) {
 	
 		i++;
@@ -171,6 +173,8 @@ int main(int argc, char* argv[]) {
 				}
 				temp3 += token3;
 			//	std::cout << temp;
+				temp3 += " " + incflags;
+				incflags = "";
 				makefile_string += temp3 + "\n\n";
 
 			} else
@@ -203,6 +207,8 @@ int main(int argc, char* argv[]) {
 				for(int i = 0; i < depnames.size(); i++) { // yeah
 					token3 += "-l" + depnames.at(i) + " ";
 				}	
+				token3 += " " + linkflags;
+				linkflags = "";
 				token3 += "\n\n";
 				//std::cout << token3 << "\n";
 				makefile_string += token3;
@@ -458,7 +464,18 @@ int main(int argc, char* argv[]) {
 			} else 
 			if(token == "checknext") {
 				as += " " + sname + line.substr(temp_get+1, line.length());
+			} // i really gave up fr here rn until i say so
+			else if(token == "incflag")
+			{
+				incflags += line.substr(temp_get+1, line.length()) + " ";
+
 			}
+			else if(token == "buildflag")
+			{
+				linkflags += line.substr(temp_get+1, line.length()) + " ";
+
+			}
+			  // ok i made the code below this before i gave up
 
 		} else {
 			if(!lmake) {

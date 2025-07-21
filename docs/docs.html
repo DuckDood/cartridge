@@ -149,6 +149,12 @@
 			<h3>installpath [path]</h3>
 			<p class="pardef"><em>installpath</em> will set installpath to [path] (by default /usr/local/bin)</p>
 
+			<h3>incflag [string]</h3>
+			<p class="pardef"><em>incflag</em> will add [string] as a flag used in the next include statement eg. <em>gcc obj/main.o -o output</em> &rarr; <em>gcc obj/main.o -o output [string]</em></p>
+
+			<h3>buildflag [string]</h3>
+			<p class="pardef"><em>buildflag</em> will add [string] as a flag used in the next build statement</p>
+
 			<h3>checknext [filename]</h3>
 			<p class="pardef bottomt"><em>checknext</em> will make <em>srcdir</em>/[filename] to be checked (if it's modified) by the next build, include, or adddir</p>
 			
